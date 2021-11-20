@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import "./newComment.css";
-const NewComment = ({setComments}) => {
+import { addNewComment } from "../../services/addNewCommentService";
+import { getAllComments } from "../../services/getAllComentsService";
+const NewComment = ({ setComments }) => {
   const [comment, setComment] = useState({
     name: "",
     email: "",
@@ -12,16 +14,13 @@ const NewComment = ({setComments}) => {
     setComment({ ...comment, [e.target.name]: e.target.value });
   };
 
-  const postCommentHandler = () => {
-    axios
-      .post("http://localhost:3002/comments", {
-        ...comment,
-        postId: 10,
-      })
-      .then((res) => axios.get("http://localhost:3002/comments"))
-      .then((res) => setComments(res.data))
+  const postCommentHandler = async () => {
+    try {
+      await addNewComment({ ...comment, postId: 10 });
 
-      .catch();
+      const { data } = await getAllComments();
+      setComments(data);
+    } catch (error) {}
   };
   return (
     <div className="newComment">
