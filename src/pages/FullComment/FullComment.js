@@ -1,10 +1,11 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import "./fullComment.css";
 import { deleteComment } from "../../services/deleteCommentService";
-import { getAllComments } from "../../services/getAllComentsService";
 import { getOneComment } from "../../services/getOneCommentService";
-const FullComment = ({ commentId, setComments, setSelectedId }) => {
+const FullComment = ({ match, history }) => {
+  console.log(history);
+
+  const commentId = match.params.id;
   const [comment, setComment] = useState(null);
   useEffect(() => {
     if (commentId) {
@@ -17,9 +18,8 @@ const FullComment = ({ commentId, setComments, setSelectedId }) => {
   const deleteHandler = async () => {
     try {
       await deleteComment(commentId);
-      const { data } = await getAllComments();
-      setComments(data);
-      setSelectedId(null);
+      history.push("/");
+     
       setComment(null);
     } catch (error) {}
   };
